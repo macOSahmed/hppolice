@@ -1,0 +1,49 @@
+name: Build iOS App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: 'stable'
+
+    - name: Install Dependencies
+      run: flutter pub get
+
+    - name: Set up CocoaPods
+      run: |
+        cd ios
+        pod install
+
+    - name: Decode Provisioning Profile
+      env:
+        ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
+      run: |
+        openssl aes-256-cbc -d -in hppolice.mobileprovision.enc -out ios/hppolice.mobileprovision -k "$ENCRYPTION_PASSWORD"
+
+    - name: Decode Certificate
+      env:
+        ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
+      run: |
+        openssl aes-256-cbc -d -in hppolice.p12.enc -out ios/hppolice.p12 -k "$ENCRYPTION_PASSWORD"
+        security import ios/hppolice.p12 -P "" -A
+
+    - name: Build iOS Debug
+      run: flutter build ios --debug
+
+    - name: Upload IPA Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: debug-ipa
+        path: build/ios/iphoneos/Runner.app
