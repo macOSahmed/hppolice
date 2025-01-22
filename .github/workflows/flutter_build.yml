@@ -18,17 +18,23 @@ jobs:
       with:
         flutter-version: '3.27.1'  # Use the appropriate Flutter version
 
-    - name: Install dependencies
-      run: flutter pub get  # Install Flutter dependencies
+    - name: Install Flutter dependencies
+      run: flutter pub get
+
+    - name: Install CocoaPods
+      run: |
+        cd ios
+        pod install
+        cd ..
 
     - name: Build the app
       run: |
-        flutter build ios --release --no-codesign  # Build the iOS app without signing
+        flutter build ios --release --no-codesign
         # The IPA will be located at build/ios/iphoneos/Runner.ipa
-        ls -lh build/ios/iphoneos/  # List files to ensure IPA is created
+        ls -lh build/ios/iphoneos/
 
     - name: Upload IPA artifact
-      uses: actions/upload-artifact@v3  # Updated to v3
+      uses: actions/upload-artifact@v3
       with:
         name: ios-release
-        path: build/ios/iphoneos/*.ipa  # Upload the IPA file for further use
+        path: build/ios/iphoneos/Runner.ipa  # Upload the specific IPA file
