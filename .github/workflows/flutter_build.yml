@@ -3,7 +3,7 @@ name: Build Flutter iOS App Without Storyboards
 on:
   push:
     branches:
-      - main  # Trigger on push to main branch
+      - main  # Trigger on push to the main branch
 
 jobs:
   build:
@@ -16,16 +16,19 @@ jobs:
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.27.1'
+        flutter-version: '3.27.1'  # Use the appropriate Flutter version
 
     - name: Install dependencies
-      run: flutter pub get
+      run: flutter pub get  # Install Flutter dependencies
 
     - name: Build the app
       run: |
-        flutter build ios --release --no-codesign
-        cd ios
-        # Create an archive using xcodebuild
-        xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release archive -archivePath ${{ github.workspace }}/Runner.xcarchive
-        # Export the IPA file
-        xcodebuild -exportArchive -archivePath ${{ github.workspace }}/Runner.xcarchive -exportOptionsPlist ${{ github.workspace }}/ios/Runner/ExportOptions.plist -exportPath ${{ github.workspace }}/build/ios/ipa
+        flutter build ios --release --no-codesign  # Build the iOS app without signing
+        # The IPA will be located at build/ios/iphoneos/Runner.ipa
+        ls -lh build/ios/iphoneos/  # List files to ensure IPA is created
+
+    - name: Upload IPA artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ios-release
+        path: build/ios/iphoneos/*.ipa  # Upload the IPA file for further use
