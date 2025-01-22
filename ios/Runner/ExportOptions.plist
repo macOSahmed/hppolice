@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plist version="1.0">
-    <dict>
-        <key>method</key>
-        <string>development</string> <!-- 'development' for testing purposes -->
-    </dict>
+<dict>
+  <key>method</key>
+  <string>ad-hoc</string>  <!-- Use ad-hoc for testing without App Store -->
+  <key>bundleIdentifier</key>
+  <string>com.example.himcops</string>  <!-- Replace with your app's bundle identifier -->
+  <key>compileBitcode</key>
+  <false/>
+  <key>uploadSymbols</key>
+  <false/>
+</dict>
 </plist>
