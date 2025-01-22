@@ -23,12 +23,12 @@ jobs:
 
     - name: Build the app
       run: |
-        flutter build ios --no-codesign  # Build the iOS app without signing
+        flutter build ios --release --no-codesign  # Build the iOS app without signing
         # The IPA will be located at build/ios/iphoneos/Runner.ipa
         ls -lh build/ios/iphoneos/  # List files to ensure IPA is created
 
     - name: Upload IPA artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3  # Updated to v3
       with:
         name: ios-release
         path: build/ios/iphoneos/*.ipa  # Upload the IPA file for further use
