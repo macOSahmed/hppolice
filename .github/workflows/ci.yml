@@ -1,0 +1,4 @@
+- name: Clean Flutter project
+  run: |
+    flutter clean
+    flutter pub get
