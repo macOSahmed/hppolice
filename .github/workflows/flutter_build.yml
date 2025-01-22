@@ -23,7 +23,7 @@ jobs:
 
     - name: Build the app
       run: |
-        flutter build ios --no-codesign  # Build the iOS app without signing
+        flutter build ios --release --no-codesign  # Build the iOS app without signing
         # The IPA will be located at build/ios/iphoneos/Runner.ipa
         ls -lh build/ios/iphoneos/  # List files to ensure IPA is created
 
